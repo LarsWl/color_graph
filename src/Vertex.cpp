@@ -13,7 +13,6 @@ void Vertex::set_color(int color)
 
 int Vertex::get_number() const
 {
-    std::cout << number << std::endl;
     return number;
 }
 
@@ -32,7 +31,12 @@ void Vertex::increment_degree()
     degree++;
 }
 
-bool Vertex::operator<(Vertex vertex)
+bool Vertex::operator<(Vertex & vertex)
 {
     return degree < vertex.degree;
+}
+
+bool Vertex::operator==(Vertex & vertex)
+{
+    return number == vertex.number;
 }

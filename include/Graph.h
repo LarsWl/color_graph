@@ -8,15 +8,18 @@ using namespace std;
 class Graph
 {
     vector<Vertex> vertices;
-    vector<pair<int, int> > adjecency;
-    int color_number;
+    map<int, vector<Vertex*>> adjecency;
+    vector<int> colors;
     
 public:
     Graph (int N, vector<vector<int>> & adjencency_matrix);
-    bool is_connected (int first_vertex_number, int second_vertex_number) const;
-    void add_edge (int V1, int V2);
+    bool is_connected (int first_vertex_number, int second_vertex_number);
+    void add_edge (int first_vertex_number, int second_vertex_number);
 
     void calculate_color_number_greedy();
 
-    Vertex & get_vertex(int number) const;
+    Vertex & get_vertex(int number);
+    map<int, vector<Vertex*>> & get_adjeceny();
+
+    vector<Vertex&> get_adjence_vertex(int vertex_number);
 };
