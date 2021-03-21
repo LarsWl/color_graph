@@ -1,0 +1,10 @@
+*
+!*.cpp
+!*.h
+!src*
+!include*
+!*.sample
+!*.yml
+!.gitignore
+!README.md
+!CMakeLists.txt
