@@ -18,7 +18,6 @@ Graph::Graph (int N, vector<vector<int>> & adjencency_matrix)
 
     for(int i = 0; i < N - 1; i++) {
         for (int j = i + 1; j < N; j++) {
-            // cout << "i: " << i << " j: " << j << " / " << adjencency_matrix[i][j] << endl;
             if (adjencency_matrix[i][j] == 1) {
                 add_edge(i, j);
             }
@@ -47,16 +46,6 @@ void Graph::add_edge (int first_vertex_number, int second_vertex_number)
 
     first_vertex_adjacent_vertices->second.push_back(&second_vertex);
     second_vertex_adjacent_vertices->second.push_back(&first_vertex);
-
-    std::cout << "Вершины у " << first_vertex_number << ", " << second_vertex_number << endl;
-    for (auto vertex : first_vertex_adjacent_vertices->second) {
-        cout << vertex->get_number() << " ";
-    }
-    cout << endl;
-    for (auto vertex : second_vertex_adjacent_vertices->second) {
-        cout << vertex->get_number() << " ";
-    }
-    cout << endl;
 
     first_vertex.increment_degree();
     second_vertex.increment_degree();
