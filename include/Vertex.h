@@ -24,5 +24,6 @@ public:
     void increment_degree();
 
     bool operator<(Vertex & vertex);
+    bool operator>(Vertex & vertex);
     bool operator==(Vertex & vertex);
 };

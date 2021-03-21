@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Graph.h>
 #include <vector>
+#include <set>
 
 int main ()
 {
@@ -9,19 +10,11 @@ int main ()
     Graph graph = Graph(4, matrix);
 
     std::cout << "here" << std::endl;
+    
+    graph.calculate_color_number_greedy();
 
-    std::cout<< "0: " << graph.get_vertex(0).get_degree() <<  std::endl;
-    std::cout<< "2: " << graph.get_vertex(2).get_degree() <<  std::endl;
-
-    if (graph.get_vertex(0) < graph.get_vertex(2)) {
-        std::cout << "Its correct" <<std::endl;
-    } else {
-        std::cout << "Its incorrect" <<std::endl;
-    }
-
-    for (auto vertex : graph.get_adjeceny().find(0)->second) {
-        std::cout<< graph.get_adjeceny().find(0)->second.size() <<  std::endl;
-        std::cout<< vertex->get_number() << ": " << vertex->get_degree() <<  std::endl;
+    for(auto vertex : graph.get_vertices()) {
+        std::cout<< vertex.get_number() << " color: " << vertex.get_color() <<  std::endl;
     }
 
     return 0;

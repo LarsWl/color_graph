@@ -36,6 +36,11 @@ bool Vertex::operator<(Vertex & vertex)
     return degree < vertex.degree;
 }
 
+bool Vertex::operator>(Vertex & vertex)
+{
+    return degree > vertex.degree;
+}
+
 bool Vertex::operator==(Vertex & vertex)
 {
     return number == vertex.number;

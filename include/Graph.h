@@ -8,7 +8,7 @@ using namespace std;
 class Graph
 {
     vector<Vertex> vertices;
-    map<int, vector<Vertex*>> adjecency;
+    map<int, vector<Vertex*>> adjecency; // Смежные вершины
     vector<int> colors;
     
 public:
@@ -18,8 +18,10 @@ public:
 
     void calculate_color_number_greedy();
 
+    vector<Vertex> & get_vertices();
     Vertex & get_vertex(int number);
-    map<int, vector<Vertex*>> & get_adjeceny();
+    map<int, vector<Vertex*>> & get_adjecency();
 
     vector<Vertex&> get_adjence_vertex(int vertex_number);
+    void sort_vertices();
 };
