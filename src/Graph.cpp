@@ -230,3 +230,24 @@ void Graph::calculate_color_number_greedy_by_lectures()
     } while (!is_full_colorized());
 }
 
+void calculate_color_number_by_coords(vector<int> colors)
+{
+
+}
+
+bool Graph::check_set_of_colors(vector<int> colors)
+{
+
+    for (auto vertex_adjacment : adjecency_with_vertex_numbers) {
+        for (auto vertex_number : vertex_adjacment.second) {
+            if (colors[vertex_adjacment.first] == colors[vertex_number]) {
+                return false;
+            }
+        }
+    }
+
+    std::cout << "hit!!!" <<endl;
+    
+    return true;
+}
+

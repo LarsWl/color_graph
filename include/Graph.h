@@ -25,6 +25,7 @@ public:
 
     void calculate_color_number_greedy();
     void calculate_color_number_greedy_by_lectures();
+    void calculate_color_number_by_coords();
 
     vector<Vertex> & get_vertices();
     Vertex & get_vertex(int number);
@@ -35,4 +36,5 @@ public:
     void sort_vertices_by_uncolor_neighbors_degree();
     bool compare_uncolor_neighbors_degree(const Vertex& a, const Vertex& b);
     int compute_uncolor_neighbors_degree(int vertex_number);
+    bool check_set_of_colors(vector<int> colors);
 };

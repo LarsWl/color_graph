@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <Graph.h>
 #include <vector>
+#include <GraphCalculator.h>
 #include <set>
 
 int main (int argc, char *argv[])
@@ -33,6 +33,19 @@ int main (int argc, char *argv[])
 
     for(auto vertex : graph.get_vertices()) {
         std::cout<< vertex.get_number() << " color: " << vertex.get_color() <<  std::endl;
+    }
+
+    std::ifstream file2;
+    file2.open(argv[1]);
+    Graph graph2 = Graph(file2);
+    file2.close();
+
+    GraphCalculator calculator(&graph2);
+
+    calculator.calculate();
+    std::cout << endl;
+    for (auto vertex : calculator.graph->get_vertices()) {
+        std::cout << vertex.get_color() << " ";
     }
 
     return 0;
