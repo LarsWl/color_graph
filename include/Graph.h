@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include "Vertex.h"
+#include <fstream>
 
 using namespace std;
 
@@ -15,6 +16,8 @@ class Graph
     
 public:
     Graph (int N, vector<vector<int>> & adjencency_matrix);
+    Graph (ifstream & file_with_matrix);
+
     bool is_connected (int first_vertex_number, int second_vertex_number);
     void add_edge (int first_vertex_number, int second_vertex_number);
     void refresh_adjecency();

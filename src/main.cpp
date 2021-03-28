@@ -1,9 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include <Graph.h>
 #include <vector>
 #include <set>
 
-int main ()
+int main (int argc, char *argv[])
 {
     vector<vector<int>> matrix = {
         {0, 0, 1, 1, 0, 1, 0, 0, 0, 0},
@@ -17,8 +18,12 @@ int main ()
         {0, 0, 0, 1, 0, 0, 0, 1, 0, 1},
         {0, 0, 0, 0, 1, 1, 0, 0, 1, 0}
         };
+    
 
-    Graph graph = Graph(10, matrix);
+    std::ifstream file;
+    file.open(argv[1]);
+    Graph graph = Graph(file);
+    file.close();
 
     std::cout << "here" << std::endl;
     

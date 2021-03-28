@@ -29,6 +29,45 @@ Graph::Graph (int N, vector<vector<int>> & adjencency_matrix)
     colors.reserve(10);
 }
 
+Graph::Graph (ifstream & file_with_matrix)
+{
+    int N;
+    file_with_matrix >> N;
+
+    vertices.reserve(N);
+
+    cout << N << " ";
+
+    for (int i = 0; i < N; i++) {
+        auto vertex = Vertex(i, 0, 0, N);
+
+        vertices.push_back(vertex);
+
+        vector<Vertex*> adjacent_vector;
+        vector<int> adjacent_vector_with_numbers;
+
+        adjecency.insert({i, adjacent_vector});
+        adjecency_with_vertex_numbers.insert({i, adjacent_vector_with_numbers});
+    }
+
+    for(int i = 0; i < N - 1; i++) {
+        for (int j = i + 1; j < N; j++) {
+            int adjecency_flag;
+            file_with_matrix >> adjecency_flag;
+
+            cout << adjecency_flag << " ";
+
+            if (adjecency_flag == 1) {
+                add_edge(i, j);
+            }
+        }
+
+        cout << endl;
+    }
+
+    colors.reserve(10);
+}
+
 void Graph::add_edge (int first_vertex_number, int second_vertex_number)
 {
     auto & first_vertex = get_vertex(first_vertex_number);
@@ -36,13 +75,11 @@ void Graph::add_edge (int first_vertex_number, int second_vertex_number)
 
     auto first_vertex_adjacent_vertices = adjecency.find(first_vertex_number);
     auto second_vertex_adjacent_vertices = adjecency.find(second_vertex_number);
-
     first_vertex_adjacent_vertices->second.push_back(&second_vertex);
     second_vertex_adjacent_vertices->second.push_back(&first_vertex);
 
     auto first_vertex_adjacent_vertice_numbers = adjecency_with_vertex_numbers.find(first_vertex_number);
     auto second_vertex_adjacent_vertice_numbers = adjecency_with_vertex_numbers.find(second_vertex_number);
-
     first_vertex_adjacent_vertice_numbers->second.push_back(second_vertex_number);
     second_vertex_adjacent_vertice_numbers->second.push_back(first_vertex_number);
 
