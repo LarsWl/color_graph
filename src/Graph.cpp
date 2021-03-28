@@ -246,8 +246,6 @@ bool Graph::check_set_of_colors(vector<int> colors)
         }
     }
 
-    std::cout << "hit!!!" <<endl;
-    
     return true;
 }
 
