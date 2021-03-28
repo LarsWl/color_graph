@@ -44,8 +44,8 @@ void GraphCalculator::increment_vertex_color(int vertex_number)
   change_history[vertex_number].push(old_color);
 
   vertex_colors[vertex_number]++;
-  
-  if (graph->check_set_of_colors(vertex_colors)) {
+
+  if (graph->check_vertex_color(vertex_number, vertex_colors[vertex_number])) {
     int used_colors_count = count_colors();
 
     if (used_colors_count < color_number) {

@@ -31,15 +31,15 @@ Graph::Graph (int N, vector<vector<int>> & adjencency_matrix)
 
 Graph::Graph (ifstream & file_with_matrix)
 {
-    int N;
-    file_with_matrix >> N;
+    int vertices_size;
+    file_with_matrix >> vertices_size;
 
-    vertices.reserve(N);
+    vertices.reserve(vertices_size);
 
-    cout << N << " " << endl;
+    cout << vertices_size << " " << endl;
 
-    for (int i = 0; i < N; i++) {
-        auto vertex = Vertex(i, 0, 0, N);
+    for (int i = 0; i < vertices_size; i++) {
+        auto vertex = Vertex(i, 0, 0, vertices_size);
 
         vertices.push_back(vertex);
 
@@ -50,19 +50,14 @@ Graph::Graph (ifstream & file_with_matrix)
         adjecency_with_vertex_numbers.insert({i, adjacent_vector_with_numbers});
     }
 
-    for(int i = 0; i < N - 1; i++) {
-        for (int j = 0; j < N; j++) {
-            int adjecency_flag;
-            file_with_matrix >> adjecency_flag;
+    int edge_size = 0;
+    file_with_matrix >> edge_size;
 
-            if (j <= i) continue;
+    for(int i = 0; i < edge_size; i++) {
+        int vertex_one, vertex_two;
+        file_with_matrix >> vertex_one >> vertex_two;
 
-            cout << adjecency_flag << " ";
-
-            if (adjecency_flag == 1) {
-                add_edge(i, j);
-            }
-        }
+        add_edge(vertex_one, vertex_two);
 
         cout << endl;
     }
@@ -201,9 +196,8 @@ void Graph::calculate_color_number_greedy()
 
 void Graph::calculate_color_number_greedy_by_lectures()
 {
-    sort_vertices();
-
     do {
+        sort_vertices();
         int color = colors.size() + 1;
         colors.push_back(color);
         
@@ -223,10 +217,12 @@ void Graph::calculate_color_number_greedy_by_lectures()
 
             if (adjacent_colors.find(color) == adjacent_colors.end()) {
                 vertex.set_color(color);
+                
+                for (auto adjacent_vertex : adjacent_vector) {
+                    adjacent_vertex->set_degree(adjacent_vertex->get_degree() - 1);
+                }
             }
         }
-
-        sort_vertices_by_uncolor_neighbors_degree();
     } while (!is_full_colorized());
 }
 
@@ -244,6 +240,17 @@ bool Graph::check_set_of_colors(vector<int> colors)
                 return false;
             }
         }
+    }
+
+    return true;
+}
+
+bool Graph::check_vertex_color(int vertex_number, int color)
+{
+    auto adjacment_vector = adjecency.find(vertex_number)->second;
+
+    for (auto adjacment_vertex : adjacment_vector) {
+        if (adjacment_vertex->get_color() == color) return false;
     }
 
     return true;

@@ -37,4 +37,5 @@ public:
     bool compare_uncolor_neighbors_degree(const Vertex& a, const Vertex& b);
     int compute_uncolor_neighbors_degree(int vertex_number);
     bool check_set_of_colors(vector<int> colors);
+    bool check_vertex_color(int vertex_number, int color);
 };
