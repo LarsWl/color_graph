@@ -36,7 +36,7 @@ Graph::Graph (ifstream & file_with_matrix)
 
     vertices.reserve(N);
 
-    cout << N << " ";
+    cout << N << " " << endl;
 
     for (int i = 0; i < N; i++) {
         auto vertex = Vertex(i, 0, 0, N);
@@ -51,9 +51,11 @@ Graph::Graph (ifstream & file_with_matrix)
     }
 
     for(int i = 0; i < N - 1; i++) {
-        for (int j = i + 1; j < N; j++) {
+        for (int j = 0; j < N; j++) {
             int adjecency_flag;
             file_with_matrix >> adjecency_flag;
+
+            if (j <= i) continue;
 
             cout << adjecency_flag << " ";
 
