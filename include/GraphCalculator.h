@@ -2,6 +2,8 @@
 #include <Graph.h>
 #include <stack>
 
+
+// Отдельный класс для реализации перебора
 class GraphCalculator
 {
     vector<stack<int>> change_history;

@@ -65,6 +65,8 @@ Graph::Graph (ifstream & file_with_matrix)
     colors.reserve(10);
 }
 
+
+// Добавляем сразу в вектор адресов смежных вершин и в вектор номеров смежных вершин.
 void Graph::add_edge (int first_vertex_number, int second_vertex_number)
 {
     auto & first_vertex = get_vertex(first_vertex_number);
@@ -103,6 +105,9 @@ Vertex & Graph::get_vertex(int number)
     }
 }
 
+
+// Так как при сортировки адреса путуются, то восстанавливаем вектор адресов вершин по вектору смежных номеров вершин
+// Вообще подумал что можно не хранить вектора адресов а вектора смежных цветов, может потом исправлю и он не понадобится
 void Graph::refresh_adjecency() 
 {
     for (auto & vertex_adjecency : adjecency) {
@@ -163,6 +168,7 @@ bool Graph::is_full_colorized()
 
 // АЛГОРИТМЫ
 
+// Жадный алгоритм своего производства
 void Graph::calculate_color_number_greedy()
 {
     sort_vertices();
@@ -194,6 +200,7 @@ void Graph::calculate_color_number_greedy()
     }
 }
 
+// Жадный алгоритм по лекциям
 void Graph::calculate_color_number_greedy_by_lectures()
 {
     do {
@@ -207,6 +214,8 @@ void Graph::calculate_color_number_greedy_by_lectures()
             auto adjacent_vector = adjecency.find(vertex.get_number())->second;
             set<int> adjacent_colors;
             
+
+            // Сбор цветов смежных вершин в множество
             for (auto adjacent_vertex : adjacent_vector) {
                 auto vertex_color = adjacent_vertex->get_color();
 
@@ -215,9 +224,11 @@ void Graph::calculate_color_number_greedy_by_lectures()
                 }
             }
 
+            // Если текущего нет, то красим
             if (adjacent_colors.find(color) == adjacent_colors.end()) {
                 vertex.set_color(color);
                 
+                // Уменьшаем степени смежных вершин так как текущую можно уже не считать
                 for (auto adjacent_vertex : adjacent_vector) {
                     adjacent_vertex->set_degree(adjacent_vertex->get_degree() - 1);
                 }
@@ -231,6 +242,7 @@ void calculate_color_number_by_coords(vector<int> colors)
 
 }
 
+// Проверка вектора цветов на пригодность
 bool Graph::check_set_of_colors(vector<int> colors)
 {
 
@@ -245,6 +257,7 @@ bool Graph::check_set_of_colors(vector<int> colors)
     return true;
 }
 
+// Проверка на пригодность цвета вершины
 bool Graph::check_vertex_color(int vertex_number, int color)
 {
     auto adjacment_vector = adjecency.find(vertex_number)->second;

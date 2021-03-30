@@ -13,6 +13,7 @@ GraphCalculator::GraphCalculator(Graph * i_graph)
   }
 }
 
+// Вызов расчета
 void GraphCalculator::calculate()
 {
   go_over_vertex_colors(0);
@@ -22,6 +23,7 @@ void GraphCalculator::calculate()
   }
 }
 
+// Рекрусивное прохождение
 int GraphCalculator::go_over_vertex_colors(int vertex_number)
 {
   if (vertex_number >= graph->get_vertices().size()) {
@@ -29,6 +31,7 @@ int GraphCalculator::go_over_vertex_colors(int vertex_number)
   }
 
   for (int i = 0; i < graph->get_vertices().size(); i++) {
+    // Увеличиваем на один и идем к следующей вершине. Вообще порядок обхода мне кажется может быть важным и заслуживать отдельного внимания
     increment_vertex_color(vertex_number);
     go_over_vertex_colors(vertex_number + 1);
   }
@@ -37,6 +40,7 @@ int GraphCalculator::go_over_vertex_colors(int vertex_number)
 }
 
 
+// Изменение цвета вершины на единицу
 void GraphCalculator::increment_vertex_color(int vertex_number)
 {
   auto old_color = vertex_colors[vertex_number];
@@ -45,6 +49,7 @@ void GraphCalculator::increment_vertex_color(int vertex_number)
 
   vertex_colors[vertex_number]++;
 
+  // Проверяем является ли данный набор цветов лучше чем предыдущий
   if (graph->check_vertex_color(vertex_number, vertex_colors[vertex_number])) {
     int used_colors_count = count_colors();
 
@@ -55,6 +60,8 @@ void GraphCalculator::increment_vertex_color(int vertex_number)
   }
 }
 
+
+// Считаем количество цветов используемых в данный момент
 int GraphCalculator::count_colors()
 {
   set<int> used_colors;
