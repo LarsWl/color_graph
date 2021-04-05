@@ -29,11 +29,5 @@ int main (int argc, char *argv[])
     
     graph.calculate_color_number_greedy_by_lectures();
 
-    std::cout << endl;
-
-    for(auto vertex : graph.get_vertices()) {
-        std::cout<< vertex.get_number() << " color: " << vertex.get_color() <<  std::endl;
-    }
-
     return 0;
 }

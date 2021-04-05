@@ -19,7 +19,6 @@ void GraphCalculator::calculate()
   go_over_vertex_colors(0);
 
   for (int i = 0; i < graph->get_vertices().size(); i++) {
-    graph->get_vertex(i).set_color(best_colors[i]);
   }
 }
 
