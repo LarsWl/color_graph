@@ -33,7 +33,7 @@ void Vertex::increment_degree()
 
 bool Vertex::operator<(Vertex & vertex)
 {
-    return degree < vertex.degree;
+    return degree >= vertex.degree;
 }
 
 bool Vertex::operator>(Vertex & vertex)

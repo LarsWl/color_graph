@@ -10,6 +10,7 @@ class Graph
 {
     vector<Vertex> vertices;
     vector<int> vertex_colors;
+    vector<int> vertex_degrees;
     map<int, vector<int>> adjecency; // Смежные цвета. Ключ - номер вершины. Значение вектор номеров вершин
     vector<int> colors;
     

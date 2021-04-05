@@ -35,12 +35,14 @@ Graph::Graph (ifstream & file_with_matrix)
 
     vertices.reserve(vertices_size);
     vertex_colors.reserve(vertices_size);
+    vertex_degrees.reserve(vertices_size);
 
     cout << vertices_size << " " << endl;
 
     for (int i = 0; i < vertices_size; i++) {
         auto vertex = Vertex(i, 0, 0, vertices_size);
         vertex_colors.push_back(0);
+        vertex_degrees.push_back(0);
         vertices.push_back(vertex);
 
         vector<int> adjacent_vector;
@@ -56,8 +58,6 @@ Graph::Graph (ifstream & file_with_matrix)
         file_with_matrix >> vertex_one >> vertex_two;
 
         add_edge(vertex_one, vertex_two);
-
-        cout << endl;
     }
 
     colors.reserve(10);
@@ -77,7 +77,9 @@ void Graph::add_edge (int first_vertex_number, int second_vertex_number)
     second_vertex_adjacent_verticies->second.push_back(first_vertex_number);
 
     first_vertex.increment_degree();
+    vertex_degrees[first_vertex_number]++;
     second_vertex.increment_degree();
+    vertex_degrees[second_vertex_number]++;
 }
 
 // map<int, vector<Vertex*>> & Graph::get_adjecency()
@@ -118,21 +120,21 @@ Vertex & Graph::get_vertex(int number)
 
 void Graph::sort_vertices()
 {
-    sort(vertices.begin(), vertices.end());
+    
     reverse(vertices.begin(), vertices.end());
 }
 
-void Graph::sort_vertices_by_uncolor_neighbors_degree()
-{
-    sort(vertices.begin(), vertices.end(), [this](const Vertex& a, const Vertex& b) {
-        int a_degree = compute_uncolor_neighbors_degree(a.get_number());
-        int b_degree = compute_uncolor_neighbors_degree(b.get_number());
+// void Graph::sort_vertices_by_uncolor_neighbors_degree()
+// {
+//     sort(vertices.begin(), vertices.end(), [this](const Vertex& a, const Vertex& b) {
+//         int a_degree = compute_uncolor_neighbors_degree(a.get_number());
+//         int b_degree = compute_uncolor_neighbors_degree(b.get_number());
 
-        return a_degree < b_degree; 
-    });
+//         return a_degree < b_degree; 
+//     });
 
-    refresh_adjecency();
-}
+//     refresh_adjecency();
+// }
 
 // int Graph::compute_uncolor_neighbors_degree(int vertex_number)
 // {
@@ -197,9 +199,14 @@ bool Graph::is_full_colorized()
 void Graph::calculate_color_number_greedy_by_lectures()
 {
     do {
-        sort_vertices();
+        sort(vertices.begin(), vertices.end(), [this](const Vertex & a, const Vertex & b) {
+            return vertex_degrees[a.get_number()] > vertex_degrees[b.get_number()];
+        });
+
         int color = colors.size() + 1;
         colors.push_back(color);
+
+        cout << "color: " << color << endl;
         
         for(auto & vertex : vertices) {
             if (vertex.get_color() >= 1) continue;
@@ -209,7 +216,7 @@ void Graph::calculate_color_number_greedy_by_lectures()
             bool can_set_color = true;
 
             for(auto adjacent_vertex : adjacent_verticies) {
-                if (vertex_colors[adjac] == color) {
+                if (vertex_colors[adjacent_vertex] == color) {
                     can_set_color = false;
                     break;
                 }
@@ -218,35 +225,36 @@ void Graph::calculate_color_number_greedy_by_lectures()
             // Если текущего нет, то красим
             if (can_set_color) {
                 vertex.set_color(color);
+                vertex_colors[vertex.get_number()] = color;
                 
                 // Уменьшаем степени смежных вершин так как текущую можно уже не считать
-                for (auto adjacent_vertex : adjacent_vector) {
-                    adjacent_vertex->set_degree(adjacent_vertex->get_degree() - 1);
+                for (auto adjacent_vertex : adjacent_verticies) {
+                    vertex_degrees[adjacent_vertex]--;
                 }
             }
         }
     } while (!is_full_colorized());
 }
 
-void calculate_color_number_by_coords(vector<int> colors)
-{
+// void calculate_color_number_by_coords(vector<int> colors)
+// {
 
-}
+// }
 
 // Проверка вектора цветов на пригодность
-bool Graph::check_set_of_colors(vector<int> colors)
-{
+// bool Graph::check_set_of_colors(vector<int> colors)
+// {
 
-    for (auto vertex_adjacment : adjecency_with_vertex_numbers) {
-        for (auto vertex_number : vertex_adjacment.second) {
-            if (colors[vertex_adjacment.first] == colors[vertex_number]) {
-                return false;
-            }
-        }
-    }
+//     for (auto vertex_adjacment : adjecency_with_vertex_numbers) {
+//         for (auto vertex_number : vertex_adjacment.second) {
+//             if (colors[vertex_adjacment.first] == colors[vertex_number]) {
+//                 return false;
+//             }
+//         }
+//     }
 
-    return true;
-}
+//     return true;
+// }
 
 // Проверка на пригодность цвета вершины
 bool Graph::check_vertex_color(int vertex_number, int color)
@@ -254,7 +262,7 @@ bool Graph::check_vertex_color(int vertex_number, int color)
     auto adjacment_vector = adjecency.find(vertex_number)->second;
 
     for (auto adjacment_vertex : adjacment_vector) {
-        if (adjacment_vertex->get_color() == color) return false;
+        if (vertex_colors[adjacment_vertex] == color) return false;
     }
 
     return true;
