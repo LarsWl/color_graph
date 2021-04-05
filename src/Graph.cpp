@@ -5,17 +5,16 @@
 Graph::Graph (int N, vector<vector<int>> & adjencency_matrix)
 {
     vertices.reserve(N);
+    vertex_colors.reserve(N);
 
     for (int i = 0; i < N; i++) {
         auto vertex = Vertex(i, 0, 0, N);
 
         vertices.push_back(vertex);
 
-        vector<Vertex*> adjacent_vector;
-        vector<int> adjacent_vector_with_numbers;
+        vector<int> adjacent_vector;
 
         adjecency.insert({i, adjacent_vector});
-        adjecency_with_vertex_numbers.insert({i, adjacent_vector_with_numbers});
     }
 
     for(int i = 0; i < N - 1; i++) {
@@ -35,19 +34,18 @@ Graph::Graph (ifstream & file_with_matrix)
     file_with_matrix >> vertices_size;
 
     vertices.reserve(vertices_size);
+    vertex_colors.reserve(vertices_size);
 
     cout << vertices_size << " " << endl;
 
     for (int i = 0; i < vertices_size; i++) {
         auto vertex = Vertex(i, 0, 0, vertices_size);
-
+        vertex_colors.push_back(0);
         vertices.push_back(vertex);
 
-        vector<Vertex*> adjacent_vector;
-        vector<int> adjacent_vector_with_numbers;
+        vector<int> adjacent_vector;
 
         adjecency.insert({i, adjacent_vector});
-        adjecency_with_vertex_numbers.insert({i, adjacent_vector_with_numbers});
     }
 
     int edge_size = 0;
@@ -72,24 +70,20 @@ void Graph::add_edge (int first_vertex_number, int second_vertex_number)
     auto & first_vertex = get_vertex(first_vertex_number);
     auto & second_vertex = get_vertex(second_vertex_number);
 
-    auto first_vertex_adjacent_vertices = adjecency.find(first_vertex_number);
-    auto second_vertex_adjacent_vertices = adjecency.find(second_vertex_number);
-    first_vertex_adjacent_vertices->second.push_back(&second_vertex);
-    second_vertex_adjacent_vertices->second.push_back(&first_vertex);
+    auto first_vertex_adjacent_verticies = adjecency.find(first_vertex_number);
+    auto second_vertex_adjacent_verticies = adjecency.find(second_vertex_number);
 
-    auto first_vertex_adjacent_vertice_numbers = adjecency_with_vertex_numbers.find(first_vertex_number);
-    auto second_vertex_adjacent_vertice_numbers = adjecency_with_vertex_numbers.find(second_vertex_number);
-    first_vertex_adjacent_vertice_numbers->second.push_back(second_vertex_number);
-    second_vertex_adjacent_vertice_numbers->second.push_back(first_vertex_number);
+    first_vertex_adjacent_verticies->second.push_back(second_vertex_number);
+    second_vertex_adjacent_verticies->second.push_back(first_vertex_number);
 
     first_vertex.increment_degree();
     second_vertex.increment_degree();
 }
 
-map<int, vector<Vertex*>> & Graph::get_adjecency()
-{
-    return adjecency;
-}
+// map<int, vector<Vertex*>> & Graph::get_adjecency()
+// {
+//     return adjecency_colors;
+// }
 
 vector<Vertex> & Graph::get_vertices()
 {
@@ -108,25 +102,24 @@ Vertex & Graph::get_vertex(int number)
 
 // Так как при сортировки адреса путуются, то восстанавливаем вектор адресов вершин по вектору смежных номеров вершин
 // Вообще подумал что можно не хранить вектора адресов а вектора смежных цветов, может потом исправлю и он не понадобится
-void Graph::refresh_adjecency() 
-{
-    for (auto & vertex_adjecency : adjecency) {
-        auto vertex_numbers = adjecency_with_vertex_numbers.find(vertex_adjecency.first)->second;
-        vector<Vertex*> new_adjecency_vector;
-        for (auto vertex_number : vertex_numbers) {
-            auto & vertex = get_vertex(vertex_number);
-            new_adjecency_vector.push_back(&vertex);
-        }
+// void Graph::refresh_adjecency() 
+// {
+//     for (auto & vertex_adjecency : adjecency) {
+//         auto vertex_numbers = adjecency_with_vertex_numbers.find(vertex_adjecency.first)->second;
+//         vector<Vertex*> new_adjecency_vector;
+//         for (auto vertex_number : vertex_numbers) {
+//             auto & vertex = get_vertex(vertex_number);
+//             new_adjecency_vector.push_back(&vertex);
+//         }
 
-        vertex_adjecency.second = new_adjecency_vector;
-    }
-}
+//         vertex_adjecency.second = new_adjecency_vector;
+//     }
+// }
 
 void Graph::sort_vertices()
 {
     sort(vertices.begin(), vertices.end());
     reverse(vertices.begin(), vertices.end());
-    refresh_adjecency();
 }
 
 void Graph::sort_vertices_by_uncolor_neighbors_degree()
@@ -141,21 +134,21 @@ void Graph::sort_vertices_by_uncolor_neighbors_degree()
     refresh_adjecency();
 }
 
-int Graph::compute_uncolor_neighbors_degree(int vertex_number)
-{
-    auto adjacent_vector = adjecency_with_vertex_numbers.find(vertex_number)->second;
-    int degree = 0;
+// int Graph::compute_uncolor_neighbors_degree(int vertex_number)
+// {
+//     auto adjacent_vector = adjecency_with_vertex_numbers.find(vertex_number)->second;
+//     int degree = 0;
 
-    for(auto adjacent_vertex_number : adjacent_vector) {
-        auto adjacent_vertex = get_vertex(adjacent_vertex_number);
+//     for(auto adjacent_vertex_number : adjacent_vector) {
+//         auto adjacent_vertex = get_vertex(adjacent_vertex_number);
 
-        if (adjacent_vertex.get_color() < 1) {
-            degree += adjacent_vertex.get_degree();
-        } 
-    }
+//         if (adjacent_vertex.get_color() < 1) {
+//             degree += adjacent_vertex.get_degree();
+//         } 
+//     }
 
-    return degree;
-}
+//     return degree;
+// }
 
 bool Graph::is_full_colorized()
 {
@@ -169,36 +162,36 @@ bool Graph::is_full_colorized()
 // АЛГОРИТМЫ
 
 // Жадный алгоритм своего производства
-void Graph::calculate_color_number_greedy()
-{
-    sort_vertices();
+// void Graph::calculate_color_number_greedy()
+// {
+//     sort_vertices();
 
-    for(auto & vertex : vertices) {
-        auto adjacent_vector = adjecency.find(vertex.get_number())->second;
-        set<int> adjacent_colors;
+//     for(auto & vertex : vertices) {
+//         auto adjacent_vector = adjecency.find(vertex.get_number())->second;
+//         set<int> adjacent_colors;
 
-        for (auto adjacent_vertex : adjacent_vector) {
-            auto vertex_color = adjacent_vertex->get_color();
+//         for (auto adjacent_vertex : adjacent_vector) {
+//             auto vertex_color = adjacent_vertex->get_color();
 
-            if (adjacent_colors.find(vertex_color) == adjacent_colors.end() && vertex_color >= 1) {
-                adjacent_colors.insert(vertex_color);
-            }
-        }
+//             if (adjacent_colors.find(vertex_color) == adjacent_colors.end() && vertex_color >= 1) {
+//                 adjacent_colors.insert(vertex_color);
+//             }
+//         }
 
-        for(auto color : colors) {
-            if (adjacent_colors.find(color) == adjacent_colors.end()) {
-                vertex.set_color(color);
-                break;
-            }
-        }
+//         for(auto color : colors) {
+//             if (adjacent_colors.find(color) == adjacent_colors.end()) {
+//                 vertex.set_color(color);
+//                 break;
+//             }
+//         }
 
-        if (vertex.get_color() < 1) {
-            int new_color = colors.size() + 1;
-            colors.push_back(new_color);
-            vertex.set_color(new_color);
-        }
-    }
-}
+//         if (vertex.get_color() < 1) {
+//             int new_color = colors.size() + 1;
+//             colors.push_back(new_color);
+//             vertex.set_color(new_color);
+//         }
+//     }
+// }
 
 // Жадный алгоритм по лекциям
 void Graph::calculate_color_number_greedy_by_lectures()
@@ -211,21 +204,19 @@ void Graph::calculate_color_number_greedy_by_lectures()
         for(auto & vertex : vertices) {
             if (vertex.get_color() >= 1) continue;
 
-            auto adjacent_vector = adjecency.find(vertex.get_number())->second;
-            set<int> adjacent_colors;
-            
+            auto adjacent_verticies = adjecency.find(vertex.get_number())->second;
 
-            // Сбор цветов смежных вершин в множество
-            for (auto adjacent_vertex : adjacent_vector) {
-                auto vertex_color = adjacent_vertex->get_color();
+            bool can_set_color = true;
 
-                if (adjacent_colors.find(vertex_color) == adjacent_colors.end() && vertex_color >= 1) {
-                    adjacent_colors.insert(vertex_color);
+            for(auto adjacent_vertex : adjacent_verticies) {
+                if (vertex_colors[adjac] == color) {
+                    can_set_color = false;
+                    break;
                 }
             }
 
             // Если текущего нет, то красим
-            if (adjacent_colors.find(color) == adjacent_colors.end()) {
+            if (can_set_color) {
                 vertex.set_color(color);
                 
                 // Уменьшаем степени смежных вершин так как текущую можно уже не считать

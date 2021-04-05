@@ -9,10 +9,9 @@ using namespace std;
 class Graph
 {
     vector<Vertex> vertices;
-    map<int, vector<Vertex*>> adjecency; // Смежные вершины
+    vector<int> vertex_colors;
+    map<int, vector<int>> adjecency; // Смежные цвета. Ключ - номер вершины. Значение вектор номеров вершин
     vector<int> colors;
-
-    map<int, vector<int>> adjecency_with_vertex_numbers; // Смежные вершины, но через номера. Так как адреса могут путаться и меняться
     
 public:
     Graph (int N, vector<vector<int>> & adjencency_matrix);
